@@ -1,0 +1,97 @@
+/* Réinitialisation des styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Body */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+}
+
+/* Conteneur principal */
+.container {
+    display: flex;
+    max-width: 1200px;
+    margin: 50px auto;
+}
+
+/* Colonne gauche */
+.left-column {
+    flex: 1;
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+/* Colonne droite */
+.right-column {
+    flex: 1;
+    padding: 20px;
+    background-color: #fff;
+}
+
+/* Titres */
+h2 {
+    color: #333;
+    margin-top: 0;
+}
+
+/* Classement de la course */
+#race-ranking {
+    margin-top: 20px;
+}
+
+#race-ranking ol {
+    list-style: none;
+    padding: 0;
+}
+
+#race-ranking li {
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #333;
+}
+
+/* Carte du circuit */
+#mapid {
+    height: 400px;
+    margin-top: 20px;
+}
+
+/* Marqueurs de kart */
+.kart-marker {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: blue;
+    border: 2px solid #fff; /* Ajout d'une bordure pour mieux distinguer les marqueurs */
+}
+
+/* Légende des marqueurs */
+.kart-legend {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.kart-legend-item {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.kart-legend-item span {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+/* Personnalisation des couleurs des marqueurs */
+.kart1 { background-color: blue; }
+.kart2 { background-color: red; }
+.kart3 { background-color: green; }
+.kart4 { background-color: orange; }
+.kart5 { background-color: purple; }
+.kart6 { background-color: yellow; }
