@@ -22,13 +22,14 @@
 </head>
 
 <body>
-  <div class="container">
+<div class="container">
     <div class="left-column">
-      <h2>Classement en temps réel de la course</h2>
-      <?php
+    <h2>Classement en temps réel de la course</h2>
+        
+        <?php
         include 'db_connexion.php';
 
-        $sql = "SELECT k.KartID, k.LapTime, k.ToursPiste, CONCAT('Kart ', k.KartID, ' - ', p.Nom, ' ', p.Prenom) AS Pilote, pt.PositionFinale
+        $sql = "SELECT k.KartID, k.LapTime, k.ToursPiste, CONCAT('Kart ', k.KartID) AS NumeroKart, CONCAT(p.Nom, ' ', p.Prenom) AS Pilote, pt.PositionFinale
                 FROM karts k
                 JOIN participation pt ON k.KartID = pt.KartID
                 JOIN pilotes p ON pt.PiloteID = p.PiloteID
@@ -38,25 +39,44 @@
 
         $result = $conn->query($sql);
 
+        $pilotes = [];
         if ($result->num_rows > 0) {
-          echo "<ol>";
-          while ($row = $result->fetch_assoc()) {
-            echo "<li>" . $row["Pilote"] . " - Position : " . $row["PositionFinale"] . "</li>";
-          }
-          echo "</ol>";
+            echo "<table class='classement'>";
+            echo "<thead><tr><th>Position</th><th>Numéro de Kart</th><th>Pilote</th></tr></thead>";
+            echo "<tbody>";
+            $position = 1;
+            while ($row = $result->fetch_assoc()) {
+                $medal = '';
+                if ($position == 1) {
+                    $medal = '🥇';
+                } elseif ($position == 2) {
+                    $medal = '🥈';
+                } elseif ($position == 3) {
+                    $medal = '🥉';
+                }
+                echo "<tr>";
+                echo "<td>" . $position . " " . $medal . "</td>";
+                echo "<td>" . $row["NumeroKart"] . "</td>";
+                echo "<td>" . $row["Pilote"] . "</td>";
+                echo "</tr>";
+                $pilotes[] = $row["Pilote"];
+                $position++;
+            }
+            echo "</tbody>";
+            echo "</table>";
         } else {
-          echo "Aucune donnée trouvée dans la base de données.";
+            echo "Aucune donnée trouvée dans la base de données.";
         }
 
         $conn->close();
-      ?>
+        ?>
     </div>
     <div class="right-column">
-      <h2>Carte du circuit</h2>
-      <!-- Conteneur pour afficher la carte -->
-      <div id="mapid"></div>
+        <h2>Carte du circuit</h2>
+        <!-- Conteneur pour afficher la carte -->
+        <div id="mapid"></div>
     </div>
-  </div>
+</div>
 
   <script>
     // Initialiser la carte Leaflet
@@ -99,38 +119,58 @@
     ];
 
     // Tracer le circuit sur la carte
-    L.polyline(circuit, {color: 'red'}).addTo(map);
+    L.polyline(circuit, {color: 'black'}).addTo(map);
 
-    // Tableau des couleurs pour les karts
-    var kartColors = ['blue', 'green', 'red', 'orange', 'purple', 'yellow'];
-
+     
     // Initialiser les marqueurs pour les 6 karts
     var kartMarkers = [];
     var kartPositions = [];
     for (var i = 0; i < 6; i++) {
-      var colorIndex = i % kartColors.length; // Assurer que chaque couleur est différente
-      var color = kartColors[colorIndex];
-      // Sélectionner une position aléatoire sur la piste
-      var randomIndex = Math.floor(Math.random() * circuit.length);
-      var latLng = circuit[randomIndex];
-      kartPositions.push(randomIndex);
-      var marker = L.marker(latLng, {
+      var marker = L.marker([45.717232, 4.882623], { // Position de départ
         icon: L.divIcon({
-          className: 'kart-marker',
-          html: `<div style="background-color: ${color}" class="marker-icon"></div>`
+          className: 'kart-marker kart' + (i + 1), // Ajouter une classe pour chaque kart
         })
       }).addTo(map);
       kartMarkers.push(marker);
+      kartPositions.push(0); // Index de départ pour chaque kart
     }
 
     // Fonction pour mettre à jour les positions des karts toutes les 2 secondes
     function updateKartPositions() {
       for (var i = 0; i < 6; i++) {
         // Avancer à la prochaine position
-        kartPositions[i] = (kartPositions[i] + 1) % circuit.length;
+        kartPositions[i] = (kartPositions[i] + Math.floor(Math.random() * 3)) % circuit.length; // Déplacer de 1 à 3 positions
         var newPosition = circuit[kartPositions[i]];
         kartMarkers[i].setLatLng(newPosition);
       }
+    //  updateRanking(); // Mettre à jour le classement après avoir mis à jour les positions
+    }
+
+    // Fonction pour mettre à jour le classement
+    function updateRanking() {
+      var rankings = kartPositions.map((position, index) => ({ index: index, position: position }));
+      rankings.sort((a, b) => a.position - b.position);
+
+      var rankingTable = document.querySelector('.classement tbody');
+      rankingTable.innerHTML = '';
+
+      rankings.forEach((kart, rank) => {
+        var medal = '';
+        if (rank === 0) medal = '🥇';
+        if (rank === 1) medal = '🥈';
+        if (rank === 2) medal = '🥉';
+
+        var row = document.createElement('tr');
+        var positionCell = document.createElement('td');
+        positionCell.textContent = (rank + 1) + ' ' + medal;
+        var pilotCell = document.createElement('td');
+        pilotCell.textContent = 'Kart ' + (kart.index + 1);
+
+
+        row.appendChild(positionCell);
+        row.appendChild(pilotCell);
+        rankingTable.appendChild(row);
+      });
     }
 
     // Mettre à jour les positions des karts toutes les 2 secondes

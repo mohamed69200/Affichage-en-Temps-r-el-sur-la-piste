@@ -1,24 +1,3 @@
-/* Réinitialisation des styles */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-/* Body */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f2f2f2;
-}
-
-/* Conteneur principal */
-.container {
-    display: flex;
-    max-width: 1200px;
-    margin: 50px auto;
-}
-
-/* Colonne gauche */
 .left-column {
     flex: 1;
     padding: 20px;
@@ -54,6 +33,43 @@ h2 {
     color: #333;
 }
 
+/* Classement stylisé avec médailles */
+.classement {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 18px;
+    text-align: left;
+}
+
+.classement thead tr {
+    background-color: #10bbc7;
+    color: #ffffff;
+    text-align: left;
+    font-weight: bold;
+}
+
+.classement th,
+.classement td {
+    padding: 12px 15px;
+}
+
+.classement tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.classement tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.classement tbody tr:last-of-type {
+    border-bottom: 2px solid #1091b8;
+}
+
+.classement tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
 /* Carte du circuit */
 #mapid {
     height: 400px;
@@ -65,7 +81,7 @@ h2 {
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background-color: blue;
+    background-color: red; /* Couleur des marqueurs changée en rouge */
     border: 2px solid #fff; /* Ajout d'une bordure pour mieux distinguer les marqueurs */
 }
 
@@ -89,8 +105,8 @@ h2 {
 }
 
 /* Personnalisation des couleurs des marqueurs */
-.kart1 { background-color: blue; }
-.kart2 { background-color: red; }
+.kart1 { background-color: red; }
+.kart2 { background-color: blue; }
 .kart3 { background-color: green; }
 .kart4 { background-color: orange; }
 .kart5 { background-color: purple; }
